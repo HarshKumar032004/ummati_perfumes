@@ -12,13 +12,17 @@
 
 import mongoose, { Mongoose } from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI!;
+const getMongoDbUri = () => {
+  const uri = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error(
-    'MONGODB_URI is not defined. Add it to your .env.local file.'
-  );
-}
+  if (!uri) {
+    throw new Error(
+      'MONGODB_URI is not defined. Add it to your environment variables.'
+    );
+  }
+
+  return uri;
+};
 
 /**
  * Global cache interface to persist connection across hot reloads in dev.
@@ -60,7 +64,7 @@ async function dbConnect(): Promise<Mongoose> {
 
   // Do not retain a stale connection after an unexpected disconnect.
   cache.conn = null;
-  const connectionPromise = mongoose.connect(MONGODB_URI, opts);
+  const connectionPromise = mongoose.connect(getMongoDbUri(), opts);
   cache.promise = connectionPromise;
 
   try {
