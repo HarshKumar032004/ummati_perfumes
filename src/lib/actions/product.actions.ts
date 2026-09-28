@@ -3,6 +3,7 @@
 import dbConnect from '@/lib/db/mongodb'
 import { Product } from '@/models/Product'
 import type { Product as IProduct, ProductSummary, ProductFilters } from '@/types'
+import { demoProducts, getDemoProduct } from '@/lib/data/demo-products'
 
 // Map full product to a lightweight summary for catalog/grid views
 function mapToSummary(doc: any): ProductSummary {
@@ -87,8 +88,13 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
 
     return docs.map(mapToSummary)
   } catch (error) {
-    console.error('[PRODUCTS] getProducts error:', error)
-    return []
+    console.warn('[PRODUCTS] Database unavailable; using curated preview catalog.')
+    const filtered = demoProducts.filter((product) => {
+      const categoryMatch = !filters.category || filters.category === 'all' || product.categories.includes(filters.category)
+      const familyMatch = !filters.fragranceFamily || product.fragranceFamily === filters.fragranceFamily
+      return categoryMatch && familyMatch
+    })
+    return filtered.slice(0, filters.limit || 50)
   }
 }
 
@@ -102,8 +108,8 @@ export async function getFeaturedProducts(limit = 4): Promise<ProductSummary[]> 
 
     return docs.map(mapToSummary)
   } catch (error) {
-    console.error('[PRODUCTS] getFeaturedProducts error:', error)
-    return []
+    console.warn('[PRODUCTS] Database unavailable; using curated featured catalog.')
+    return demoProducts.filter((product) => product.isBestSeller || product.isNewArrival).slice(0, limit)
   }
 }
 
@@ -128,7 +134,15 @@ export async function getProductBySlug(slug: string): Promise<IProduct | null> {
       }))
     } as unknown as IProduct
   } catch (error) {
-    console.error(`[PRODUCTS] getProductBySlug error (${slug}):`, error)
-    return null
+    console.warn(`[PRODUCTS] Database unavailable for ${slug}; using curated preview product.`)
+    const product = getDemoProduct(slug)
+    if (!product) return null
+    return {
+      ...product,
+      description: product.shortDescription,
+      topNotes: [], middleNotes: [], baseNotes: [], longevity: '6-8 hours', sillage: 'Moderate',
+      inventoryPolicy: 'deny', trackInventory: true, tags: [], isActive: true, isFeatured: true,
+      createdAt: new Date(0).toISOString(), updatedAt: new Date(0).toISOString(),
+    } as unknown as IProduct
   }
 }

@@ -7,20 +7,12 @@
 
 import { Redis } from '@upstash/redis';
 
-const UPSTASH_REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
-const UPSTASH_REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-if (!UPSTASH_REDIS_URL || !UPSTASH_REDIS_TOKEN) {
-  throw new Error(
-    'UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be defined in .env.local'
-  );
-}
-
-// Create the stateless HTTP client
-export const upstashClient = new Redis({
-  url: UPSTASH_REDIS_URL,
-  token: UPSTASH_REDIS_TOKEN,
+const upstashClient = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL || 'https://placeholder.invalid',
+  token: process.env.UPSTASH_REDIS_REST_TOKEN || 'placeholder',
 });
+
+export { upstashClient };
 
 /**
  * We export a wrapper that maps standard ioredis method signatures to @upstash/redis syntax.

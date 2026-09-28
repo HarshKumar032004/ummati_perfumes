@@ -25,6 +25,10 @@ export function Footer() {
   return (
     <footer className="border-t border-hairline bg-bg-surface">
       <div className="container-brand py-20 lg:py-28">
+        <div className="mb-16 max-w-3xl">
+          <p className="text-label text-brand-accent">The Ummati journal</p>
+          <h2 className="mt-4 font-display text-4xl font-light leading-none tracking-tight text-foreground sm:text-5xl">Scent, memory, and the rituals that make a fragrance yours.</h2>
+        </div>
         <div className="grid gap-16 lg:grid-cols-[1.6fr_0.7fr_0.7fr_1fr] lg:gap-10">
           <div>
             <Link href="/" className="font-display text-3xl tracking-[0.2em] text-foreground transition-colors hover:text-brand-accent">UMMATI</Link>
