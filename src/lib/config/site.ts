@@ -8,7 +8,7 @@ export const siteConfig = {
   tagline: 'Wear the Invisible',
   description:
     'Premium D2C fragrance brand crafting modern, sophisticated perfumes for the discerning Indian customer.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ummatiperfumes.com',
+  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://ummatiperfumes.com',
   ogImage: '/og-image.jpg',
   email: 'hello@ummatiperfumes.com',
   phone: '+91 98765 43210',
