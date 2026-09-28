@@ -1,73 +1,9 @@
-import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Plus } from 'lucide-react'
+import { Plus, Search, MoreHorizontal } from 'lucide-react'
 import { getAllAdminProducts } from '@/lib/actions/admin.product.actions'
 import { formatPrice } from '@/lib/utils/currency'
 import { Button } from '@/components/ui/button'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
-export default async function AdminProductsPage() {
-  const products = await getAllAdminProducts()
-
-  return (
-    <div className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
-        <h1 className="font-display text-3xl text-[#F0E8D8]">Products</h1>
-        <Button variant="premium" asChild>
-          <Link href="/admin/products/new">
-            <Plus className="h-4 w-4 mr-2" />
-            Create Product
-          </Link>
-        </Button>
-      </div>
-
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-16">Image</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Price</TableHead>
-            <TableHead>Stock (Default)</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.map((product: any) => {
-            const primaryImage = product.images.find((img: any) => img.isPrimary) || product.images[0]
-            const defaultVariant = product.variants.find((v: any) => v.isDefault) || product.variants[0]
-            
-            return (
-              <TableRow key={product._id}>
-                <TableCell>
-                  <div className="relative h-12 w-10 bg-[#1A1820] rounded border border-[#2A2530] overflow-hidden">
-                    {primaryImage && (
-                      <Image src={primaryImage.url} alt={product.name} fill className="object-cover" />
-                    )}
-                  </div>
-                </TableCell>
-                <TableCell className="font-medium text-[#F0E8D8]">{product.name}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    product.isActive ? 'bg-[#C8A96E]/20 text-[#C8A96E]' : 'bg-[#2A2530] text-[#7A6B58]'
-                  }`}>
-                    {product.isActive ? 'Active' : 'Draft'}
-                  </span>
-                </TableCell>
-                <TableCell>{formatPrice(product.basePrice)}</TableCell>
-                <TableCell>{defaultVariant ? defaultVariant.stock : 'N/A'}</TableCell>
-              </TableRow>
-            )
-          })}
-        </TableBody>
-      </Table>
-    </div>
-  )
-}
+export default async function AdminProductsPage() { const products = await getAllAdminProducts(); return <div className="flex flex-col gap-6"><div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#7A6B58]">Catalog / {products.length} products</p><h1 className="font-display text-3xl">Products</h1></div><Button variant="premium" asChild><Link href="/admin/products/new"><Plus data-icon="inline-start" />Create Product</Link></Button></div><div className="flex flex-col gap-3 sm:flex-row"><div className="flex flex-1 items-center gap-3 border border-[#2A2530] bg-[#151219] px-3"><Search className="size-4 text-[#7A6B58]" /><input aria-label="Search products" placeholder="Search by name or SKU" className="min-h-11 w-full bg-transparent text-sm outline-none placeholder:text-[#7A6B58]" /></div><button className="min-h-11 border border-[#2A2530] px-4 text-sm text-[#C0AE95]">All status</button><button className="min-h-11 border border-[#2A2530] px-4 text-sm text-[#C0AE95]">Sort: Recent</button></div><div className="overflow-hidden border border-[#2A2530] bg-[#151219]"><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead className="w-16">Image</TableHead><TableHead>Name / SKU</TableHead><TableHead>Status</TableHead><TableHead>Price</TableHead><TableHead>Stock</TableHead><TableHead className="w-12" /></TableRow></TableHeader><TableBody>{products.map((product: any) => { const primaryImage = product.images.find((img: any) => img.isPrimary) || product.images[0]; const variant = product.variants.find((v: any) => v.isDefault) || product.variants[0]; return <TableRow key={product._id}><TableCell><div className="relative size-12 overflow-hidden border border-[#2A2530] bg-[#1A1820]">{primaryImage && <Image src={primaryImage.url} alt={product.name} fill className="object-cover" />}</div></TableCell><TableCell><p className="font-medium text-[#F0E8D8]">{product.name}</p><p className="text-xs text-[#7A6B58]">{variant?.sku || 'No SKU'}</p></TableCell><TableCell><span className={`rounded-full px-2 py-1 text-xs ${product.isActive ? 'bg-[#3D6B4A]/20 text-[#9AE8A8]' : 'bg-[#2A2530] text-[#7A6B58]'}`}>{product.isActive ? 'Active' : 'Draft'}</span></TableCell><TableCell className="tabular-nums">{formatPrice(product.basePrice)}</TableCell><TableCell className={variant?.stock < 10 ? 'text-[#E8C89A]' : ''}>{variant?.stock ?? 'N/A'}{variant?.stock < 10 && <span className="ml-2 text-xs">Low</span>}</TableCell><TableCell><MoreHorizontal className="size-4 text-[#7A6B58]" /></TableCell></TableRow> })}</TableBody></Table></div></div></div> }
