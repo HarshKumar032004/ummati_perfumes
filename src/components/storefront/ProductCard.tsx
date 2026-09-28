@@ -22,6 +22,7 @@ export function ProductCard({ product, priority = false, onQuickAdd, className }
   const [isAdding, setIsAdding] = useState(false)
   const addItem = useCartStore((state) => state.addItem)
   const primaryImage = product.images.find((img) => img.isPrimary) ?? product.images[0]
+  const alternateImage = product.images.find((img) => !img.isPrimary) ?? product.images[1]
   const defaultVariant = product.variants.find((variant) => variant.isDefault) ?? product.variants[0]
   const price = defaultVariant?.price ?? product.basePrice
   const compareAt = product.compareAtPrice
@@ -66,9 +67,19 @@ export function ProductCard({ product, priority = false, onQuickAdd, className }
               fill
               priority={priority}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              className="object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.02]"
+              className="object-cover transition-all duration-700 ease-luxury group-hover:scale-[1.03] group-hover:opacity-0"
             />
-          ) : (
+          ) : null}
+          {alternateImage?.url ? (
+            <Image
+              src={alternateImage.url}
+              alt={alternateImage.alt || `${product.name} alternate view`}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              className="object-cover opacity-0 transition-all duration-700 ease-luxury group-hover:scale-[1.03] group-hover:opacity-100"
+            />
+          ) : null}
+          {!primaryImage?.url && (
             <div className="absolute inset-0 flex items-center justify-center bg-bg-elevated">
               <span className="font-display text-2xl italic text-text-muted">{product.name}</span>
             </div>
