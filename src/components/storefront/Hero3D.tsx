@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useRef, useSyncExternalStore } from 'react'
+import { Suspense, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ContactShadows, Environment, Float, Lightformer, PresentationControls } from '@react-three/drei'
 import * as THREE from 'three'
@@ -58,49 +58,37 @@ function ProceduralBottle() {
 
 export function Hero3D() {
   const mounted = useSyncExternalStore(() => () => undefined, () => true, () => false)
+  const [isVisible, setIsVisible] = useState(true)
+  const [isStatic, setIsStatic] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
   const hasWebGL = mounted && canUseWebGL()
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const mobile = window.matchMedia('(max-width: 640px)').matches
+    setIsStatic(reduceMotion || mobile)
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0.05 })
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   if (!mounted) return <div className="h-[31rem] w-full bg-bg-surface lg:h-[calc(100vh-8rem)]" />
 
-  if (!hasWebGL) {
-    return (
-      <div className="relative flex h-[31rem] w-full items-center justify-center overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]">
-        <div className="absolute h-72 w-72 rounded-full bg-brand-accent/10 blur-3xl" />
-        <div className="relative flex h-[25rem] w-44 items-center justify-center rounded-[5rem_5rem_2rem_2rem] border border-brand-accent/30 bg-bg-elevated shadow-[0_32px_90px_rgba(0,0,0,0.25)]">
-          <div className="text-center">
-            <span className="font-display text-4xl tracking-[0.18em] text-brand-accent">UMMATI</span>
-            <span className="mt-3 block text-label text-text-muted">Extrait de parfum</span>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  const poster = <div className="relative flex h-[31rem] w-full items-center justify-center overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]"><img src="https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1200&q=85" alt="Ummati Oud Kannauj perfume bottle" className="absolute inset-0 h-full w-full object-cover opacity-35 grayscale" /><div className="absolute inset-0 bg-bg-base/55" /><div className="relative flex h-[25rem] w-44 items-center justify-center rounded-[5rem_5rem_2rem_2rem] border border-brand-accent/30 bg-bg-elevated/80 shadow-[0_32px_90px_rgba(0,0,0,0.25)]"><div className="text-center"><span className="font-display text-4xl tracking-[0.18em] text-brand-accent">UMMATI</span><span className="mt-3 block text-label text-text-muted">Extrait de parfum</span></div></div></div>
+
+  if (!hasWebGL || isStatic) return poster
 
   return (
-    <div className="relative h-[31rem] w-full overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]">
+    <div ref={containerRef} className="relative h-[31rem] w-full overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]">
       <div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-accent/10 blur-[7rem]" />
-      <Canvas shadows camera={{ position: [0, 0, 8], fov: 42 }} dpr={[1, 1.5]}>
-        <ambientLight intensity={0.55} />
-        <spotLight position={[6, 9, 8]} angle={0.2} penumbra={1} intensity={1.4} castShadow />
-        <Environment resolution={256} background={false}>
-          <group rotation={[-Math.PI / 4, -0.3, 0]}>
-            <Lightformer intensity={4} rotation-x={Math.PI / 2} position={[0, 5, -9]} scale={[10, 10, 1]} />
-            <Lightformer intensity={2} rotation-y={Math.PI / 2} position={[-5, 1, -1]} scale={[20, 0.1, 1]} />
-            <Lightformer intensity={2} rotation-y={Math.PI / 2} position={[5, 1, -1]} scale={[20, 0.1, 1]} />
-          </group>
-        </Environment>
-        <Suspense fallback={null}>
-          <PresentationControls global snap rotation={[0, 0.25, 0]} polar={[-Math.PI / 5, Math.PI / 4]} azimuth={[-Math.PI / 2, Math.PI / 2]}>
-            <Float speed={1.25} rotationIntensity={0.25} floatIntensity={0.65}>
-              <ProceduralBottle />
-            </Float>
-          </PresentationControls>
-        </Suspense>
+      <Canvas shadows frameloop={isVisible ? 'always' : 'never'} camera={{ position: [0, 0, 8], fov: 42 }} dpr={[1, 1.5]}>
+        <ambientLight intensity={0.55} /><spotLight position={[6, 9, 8]} angle={0.2} penumbra={1} intensity={1.4} castShadow /><pointLight position={[-4, 3, -3]} intensity={0.8} color="#d7b16b" />
+        <Environment preset="studio" resolution={256} background={false} />
+        <Suspense fallback={null}><PresentationControls global snap rotation={[0, 0.25, 0]} polar={[-Math.PI / 5, Math.PI / 4]} azimuth={[-Math.PI / 2, Math.PI / 2]}><Float speed={1.25} rotationIntensity={0.25} floatIntensity={0.65}><ProceduralBottle /></Float></PresentationControls></Suspense>
         <ContactShadows position={[0, -1.8, 0]} opacity={0.52} scale={8} blur={2.8} far={4} color="#000000" />
       </Canvas>
-      <div className="pointer-events-none absolute bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-label text-text-muted">
-        Drag to discover the bottle
-      </div>
+      <div className="pointer-events-none absolute bottom-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-label text-text-muted">Drag to discover the bottle</div>
     </div>
   )
 }

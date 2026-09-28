@@ -86,7 +86,15 @@ export async function getProducts(filters: ProductFilters = {}): Promise<Product
       .limit(filters.limit || 50)
       .lean()
 
-    return docs.map(mapToSummary)
+    const summaries = docs.map(mapToSummary)
+    if (summaries.length > 0) return summaries
+
+    const filtered = demoProducts.filter((product) => {
+      const categoryMatch = !filters.category || filters.category === 'all' || product.categories.includes(filters.category)
+      const familyMatch = !filters.fragranceFamily || product.fragranceFamily === filters.fragranceFamily
+      return categoryMatch && familyMatch
+    })
+    return filtered.slice(0, filters.limit || 50)
   } catch (error) {
     console.warn('[PRODUCTS] Database unavailable; using curated preview catalog.')
     const filtered = demoProducts.filter((product) => {
@@ -106,7 +114,10 @@ export async function getFeaturedProducts(limit = 4): Promise<ProductSummary[]> 
       .limit(limit)
       .lean()
 
-    return docs.map(mapToSummary)
+    const summaries = docs.map(mapToSummary)
+    if (summaries.length > 0) return summaries
+
+    return demoProducts.filter((product) => product.isBestSeller || product.isNewArrival).slice(0, limit)
   } catch (error) {
     console.warn('[PRODUCTS] Database unavailable; using curated featured catalog.')
     return demoProducts.filter((product) => product.isBestSeller || product.isNewArrival).slice(0, limit)
