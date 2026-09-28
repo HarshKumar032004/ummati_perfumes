@@ -39,3 +39,20 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Files
+Thumbs.db
+desktop.ini
+
+# Backup Files
+*.bak
+*.orig
+
+# Keep env example
+!.env.example
