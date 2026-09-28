@@ -83,6 +83,24 @@ export default async function Homepage() {
       </section>
 
       <section className="border-y border-hairline bg-bg-surface">
+        <div className="container-brand py-20 lg:py-28">
+          <div className="grid gap-10 border-b border-hairline pb-16 lg:grid-cols-[1.2fr_2fr] lg:items-end">
+            <p className="text-label text-brand-accent">A house of quiet rituals</p>
+            <p className="max-w-4xl font-display text-3xl font-light leading-tight text-foreground sm:text-5xl lg:text-6xl">Perfume as a private language — carried softly, remembered long after.</p>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4">
+            {[['01', 'Kannauj lineage', 'Rooted in the world’s attar capital.'], ['02', 'Slow-distilled', 'Time is the first ingredient.'], ['03', 'Alcohol-free attars', 'Closer to skin, never louder.'], ['04', 'Small-batch', 'Made with intention, not volume.']].map(([number, title, copy]) => (
+              <div key={number} className="border-r border-hairline px-5 py-10 first:pl-0 last:border-0 sm:px-8">
+                <span className="text-label text-brand-accent">{number}</span>
+                <h3 className="mt-8 font-display text-2xl font-light text-foreground">{title}</h3>
+                <p className="mt-3 max-w-[13rem] text-xs leading-relaxed text-text-muted">{copy}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-hairline bg-bg-base">
         <div className="container-brand grid items-center gap-16 py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-28 lg:py-40">
           <div className="relative aspect-[4/5] overflow-hidden bg-bg-elevated">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,169,110,0.28),transparent_32%),linear-gradient(145deg,transparent_20%,rgba(28,25,23,0.18))]" />
@@ -100,6 +118,46 @@ export default async function Homepage() {
               <p>We work with a restrained palette of precious materials, letting every note breathe before it finds its place in the final composition.</p>
             </div>
             <Link href="/about" className="luxury-link mt-12 inline-flex items-center gap-3 text-label text-foreground transition-colors hover:text-brand-accent">Enter the atelier <ArrowUpRight className="h-4 w-4" strokeWidth={1.2} /></Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-y border-hairline bg-bg-base">
+        <div className="container-brand py-24 lg:py-36">
+          <div className="flex flex-col justify-between gap-8 border-b border-hairline pb-10 md:flex-row md:items-end">
+            <div>
+              <p className="text-label mb-5 text-brand-accent">The olfactive map</p>
+              <h2 className="text-display-lg text-foreground">Find your atmosphere.</h2>
+            </div>
+            <Link href="/shop" className="luxury-link text-label text-text-muted hover:text-brand-accent">Explore all notes <ArrowUpRight className="ml-2 inline h-4 w-4" strokeWidth={1.2} /></Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3">
+            {['Oud', 'Rose', 'Musk', 'Amber', 'Sandalwood', 'Mitti'].map((note, index) => (
+              <Link key={note} href={`/shop?family=${note.toLowerCase()}`} className="group border-b border-r border-hairline px-2 py-8 last:border-r-0 sm:px-5 lg:py-12">
+                <span className="text-label text-text-muted">0{index + 1}</span>
+                <span className="mt-3 block font-display text-4xl font-light text-foreground transition-colors group-hover:text-brand-accent sm:text-6xl">{note}</span>
+                <span className="mt-4 block text-xs text-text-muted opacity-0 transition-opacity group-hover:opacity-100">Discover the collection <ArrowUpRight className="ml-1 inline h-3 w-3" /></span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#171411] text-[#ede6d8]">
+        <div className="container-brand grid gap-16 py-28 lg:grid-cols-[0.8fr_1.2fr] lg:py-40">
+          <div>
+            <p className="text-label text-[#c8a96e]">Inside the atelier</p>
+            <h2 className="mt-7 font-display text-6xl font-light leading-[0.92] tracking-tight sm:text-8xl">Made to<br /><em className="text-[#c8a96e]">linger.</em></h2>
+            <p className="mt-10 max-w-sm text-sm leading-[1.9] text-[#a8a29e]">From rain-soaked earth to warm woods, each Ummati composition is distilled, rested, and finished by hand.</p>
+          </div>
+          <div className="grid self-end border-t border-[#ede6d8]/15 sm:grid-cols-3 sm:border-t-0">
+            {[['01', 'Harvest', 'Materials chosen at their most expressive.'], ['02', 'Distil', 'Copper, steam, patience, and instinct.'], ['03', 'Mature', 'Time lets the rough edges become yours.']].map(([number, title, copy]) => (
+              <div key={number} className="border-b border-[#ede6d8]/15 py-8 sm:border-l sm:border-b-0 sm:px-7 sm:py-0">
+                <span className="text-label text-[#c8a96e]">{number}</span>
+                <h3 className="mt-12 font-display text-3xl font-light">{title}</h3>
+                <p className="mt-4 text-sm leading-relaxed text-[#a8a29e]">{copy}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
