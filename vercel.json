@@ -1,0 +1,7 @@
+{
+  "regions": ["bom1"],
+  "framework": "nextjs",
+  "github": {
+    "silent": true
+  }
+}
