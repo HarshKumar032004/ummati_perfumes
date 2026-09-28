@@ -9,9 +9,10 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 interface ProductGalleryProps {
   images: { url: string; alt: string }[]
+  slug?: string
 }
 
-export function ProductGallery({ images }: ProductGalleryProps) {
+export function ProductGallery({ images, slug }: ProductGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const allImages = images.length > 0 ? images : [{ url: '', alt: 'No image available' }]
   const currentImage = allImages[currentIndex]
@@ -38,7 +39,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
           <ZoomIn className="size-4" />
         </button>
         <AnimatePresence mode="wait">
-          <motion.div key={currentIndex} initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0">
+          <motion.div layoutId={slug && currentIndex === 0 ? `product-image-${slug}` : undefined} key={currentIndex} initial={{ opacity: 0, scale: 1.02 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }} className="absolute inset-0">
             {currentImage.url ? <Image src={currentImage.url} alt={currentImage.alt} fill priority sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover" /> : <div className="flex h-full items-center justify-center font-display text-2xl italic text-text-muted">No image</div>}
           </motion.div>
         </AnimatePresence>

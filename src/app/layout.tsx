@@ -4,6 +4,7 @@ import { siteConfig } from '@/lib/config/site'
 import { Suspense } from 'react'
 import { LoginModal } from '@/components/auth/LoginModal'
 import { ThemeProvider } from '@/components/providers/ThemeProvider'
+import { CommandPalette, ScrollProgress } from '@/components/global/StorefrontInteractions'
 
 // ─── Root Metadata ────────────────────────────────────────────────────────────
 export const metadata: Metadata = {
@@ -75,7 +76,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col antialiased">
         <ThemeProvider>
+          <ScrollProgress />
           {children}
+          <CommandPalette />
           <Suspense fallback={null}>
             <LoginModal />
           </Suspense>

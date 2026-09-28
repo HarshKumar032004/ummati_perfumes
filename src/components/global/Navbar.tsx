@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, Moon, Search, ShoppingBag, Sun, X } from 'lucide-react'
+import { Heart, Menu, Moon, Search, ShoppingBag, Sun, X } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useEffect, useState, useSyncExternalStore } from 'react'
 import { cn } from '@/lib/utils'
@@ -144,6 +144,7 @@ export function Navbar() {
               <Search className="h-[17px] w-[17px]" strokeWidth={1.4} />
             </button>
             <ThemeToggle />
+            <Link href="/vault" aria-label="Open Vault" className="flex h-9 w-9 items-center justify-center text-text-muted transition-colors hover:text-brand-accent"><Heart className="size-4" /></Link>
             <button
               type="button"
               onClick={openCart}

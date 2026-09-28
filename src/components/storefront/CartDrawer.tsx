@@ -9,7 +9,7 @@ import { formatPrice } from '@/lib/utils/currency'
 import { Sheet, SheetBody, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 export function CartDrawer() {
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity } = useCartStore()
+  const { items, isOpen, setIsOpen, removeItem, updateQuantity, giftWrap, giftNote, setGiftWrap, setGiftNote } = useCartStore()
   const subtotal = useCartSubtotal()
   const mounted = useSyncExternalStore(() => () => undefined, () => true, () => false)
 
@@ -76,6 +76,14 @@ export function CartDrawer() {
                 <div className="h-1 overflow-hidden bg-bg-elevated" role="progressbar" aria-valuemin={0} aria-valuemax={99900} aria-valuenow={Math.min(subtotal, 99900)} aria-label="Free shipping progress">
                   <div className="h-full bg-brand-accent transition-[width] duration-500" style={{ width: `${Math.min(100, (subtotal / 99900) * 100)}%` }} />
                 </div>
+              </div>
+              <div className="border-y border-hairline py-4">
+                <label className="flex cursor-pointer items-center justify-between gap-4 text-sm text-text-secondary">
+                  <span>Wrap as a gift</span>
+                  <input type="checkbox" checked={giftWrap} onChange={(event) => setGiftWrap(event.target.checked)} className="sr-only peer" />
+                  <span aria-hidden className="relative h-5 w-9 rounded-full border border-hairline transition-colors peer-checked:bg-brand-accent"><span className="absolute left-1 top-1 size-3 rounded-full bg-text-muted transition-transform peer-checked:translate-x-4 peer-checked:bg-primary-foreground" /></span>
+                </label>
+                {giftWrap && <textarea value={giftNote} onChange={(event) => setGiftNote(event.target.value)} maxLength={240} placeholder="A note for the recipient (optional)" className="mt-4 min-h-20 w-full resize-none border border-hairline bg-bg-base p-3 text-sm text-foreground outline-none placeholder:text-text-muted focus:border-brand-accent" />}
               </div>
               <p className="text-xs leading-relaxed text-text-muted">Shipping and taxes are calculated at checkout.</p>
               <Link href="/checkout" onClick={() => setIsOpen(false)} className="flex h-14 w-full items-center justify-center gap-3 bg-brand-accent text-label text-primary-foreground transition-colors hover:bg-foreground hover:text-background">Continue to checkout <ArrowRight /></Link>

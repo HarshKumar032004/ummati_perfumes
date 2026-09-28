@@ -67,7 +67,7 @@ export default async function ProductDetailPage({ params }: PDPProps) {
         </nav>
 
         <div className="grid items-start gap-14 lg:grid-cols-[minmax(0,1.1fr)_minmax(22rem,0.9fr)] lg:gap-24">
-          <ProductGallery images={product.images} />
+          <ProductGallery images={product.images} slug={product.slug} />
 
           <div className="lg:sticky lg:top-32">
             <p className="text-label mb-5 text-brand-accent">{product.fragranceFamily} · Extrait de parfum</p>

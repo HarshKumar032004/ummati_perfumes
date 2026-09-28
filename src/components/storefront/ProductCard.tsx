@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { ArrowUpRight, ShoppingBag, Star } from 'lucide-react'
+import { VaultButton } from '@/components/global/StorefrontInteractions'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { formatPrice } from '@/lib/utils/currency'
@@ -59,7 +60,7 @@ export function ProductCard({ product, priority = false, onQuickAdd, className }
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
     >
       <Link href={`/product/${product.slug}`} className="block focus-visible:outline-none" aria-label={`${product.name} — ${formatPrice(price)}`}>
-        <div className="relative aspect-[4/5] overflow-hidden bg-bg-surface">
+        <motion.div layoutId={`product-image-${product.slug}`} className="relative aspect-[4/5] overflow-hidden bg-bg-surface">
           {primaryImage?.url ? (
             <Image
               src={primaryImage.url}
@@ -107,14 +108,14 @@ export function ProductCard({ product, priority = false, onQuickAdd, className }
               {isAdding ? <span className="h-3 w-3 animate-spin rounded-full border border-current border-t-transparent" /> : <ShoppingBag className="h-3.5 w-3.5" strokeWidth={1.5} />}
             </button>
           </motion.div>
-        </div>
+        </motion.div>
 
         <div className="flex items-start justify-between gap-4 border-b border-hairline py-5">
           <div className="min-w-0">
             <p className="text-label mb-2 text-brand-accent">{product.fragranceFamily}</p>
-            <h3 className="font-display text-[1.65rem] font-light leading-none tracking-[-0.02em] text-foreground transition-colors group-hover:text-brand-accent">
+            <motion.h3 layoutId={`product-name-${product.slug}`} className="font-display text-[1.65rem] font-light leading-none tracking-[-0.02em] text-foreground transition-colors group-hover:text-brand-accent">
               {product.name}
-            </h3>
+            </motion.h3>
             <p className="mt-3 line-clamp-2 text-xs leading-relaxed text-text-muted">
               {[product.fragranceFamily, ...product.categories.slice(0, 2)].join(' · ')}
             </p>
@@ -127,6 +128,7 @@ export function ProductCard({ product, priority = false, onQuickAdd, className }
       </Link>
 
       <div className="mt-3 flex items-center justify-between text-text-muted">
+        <VaultButton productId={product._id} />
         <div className="flex items-center gap-2" aria-label={`${product.averageRating} out of 5 stars, ${product.reviewCount} reviews`}>
           {product.reviewCount > 0 && <><Star className="h-3 w-3 fill-brand-accent text-brand-accent" /><span className="text-xs">{product.averageRating.toFixed(1)} / {product.reviewCount}</span></>}
         </div>

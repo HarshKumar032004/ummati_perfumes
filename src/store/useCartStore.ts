@@ -15,6 +15,10 @@ export interface CartItem {
 interface CartState {
   items: CartItem[]
   isOpen: boolean
+  giftWrap: boolean
+  giftNote: string
+  setGiftWrap: (enabled: boolean) => void
+  setGiftNote: (note: string) => void
   
   // Actions
   addItem: (item: CartItem) => void
@@ -33,6 +37,10 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       isOpen: false,
+      giftWrap: false,
+      giftNote: '',
+      setGiftWrap: (giftWrap) => set({ giftWrap }),
+      setGiftNote: (giftNote) => set({ giftNote }),
 
       addItem: (newItem: CartItem) => set((state) => {
         const existingItem = state.items.find(item => item.id === newItem.id)

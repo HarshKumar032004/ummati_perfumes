@@ -60,6 +60,7 @@ export function Hero3D() {
   const mounted = useSyncExternalStore(() => () => undefined, () => true, () => false)
   const [isVisible, setIsVisible] = useState(true)
   const [isStatic, setIsStatic] = useState(false)
+  const [glow, setGlow] = useState({ x: 50, y: 50 })
   const containerRef = useRef<HTMLDivElement>(null)
   const hasWebGL = mounted && canUseWebGL()
 
@@ -80,8 +81,8 @@ export function Hero3D() {
   if (!hasWebGL || isStatic) return poster
 
   return (
-    <div ref={containerRef} className="relative h-[31rem] w-full overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]">
-      <div className="absolute left-1/2 top-1/2 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-accent/10 blur-[7rem]" />
+    <div ref={containerRef} onMouseMove={(event) => { const box = event.currentTarget.getBoundingClientRect(); setGlow({ x: ((event.clientX - box.left) / box.width) * 100, y: ((event.clientY - box.top) / box.height) * 100 }) }} className="relative h-[31rem] w-full overflow-hidden bg-bg-surface lg:h-[calc(100vh-8rem)]">
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-70 transition-[background] duration-700" style={{ background: `radial-gradient(circle at ${glow.x}% ${glow.y}%, rgba(214,173,103,0.14), transparent 36%)` }} />
       <Canvas shadows frameloop={isVisible ? 'always' : 'never'} camera={{ position: [0, 0, 8], fov: 42 }} dpr={[1, 1.5]}>
         <ambientLight intensity={0.55} /><spotLight position={[6, 9, 8]} angle={0.2} penumbra={1} intensity={1.4} castShadow /><pointLight position={[-4, 3, -3]} intensity={0.8} color="#d7b16b" />
         <Environment preset="studio" resolution={256} background={false} />
