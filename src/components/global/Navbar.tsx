@@ -111,7 +111,7 @@ export function Navbar() {
           scrolled ? 'glass' : 'bg-bg-base/95',
         )}
       >
-        <nav className="container-brand relative flex h-[4.25rem] items-center justify-between gap-2 sm:h-[4.5rem] sm:gap-4 lg:h-20">
+        <nav className="container-brand grid h-[4.25rem] grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-1 sm:h-[4.5rem] sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-2 lg:h-20 lg:flex">
           <div className="hidden items-center gap-8 lg:flex">
             {navLinks.map((link) => (
               <NavLink
@@ -134,7 +134,7 @@ export function Navbar() {
           <Link
             href="/"
             aria-label="Ummati Perfumes — Home"
-            className="absolute left-1/2 max-w-[45%] -translate-x-1/2 truncate font-display text-[1.35rem] font-medium tracking-[0.16em] text-foreground transition-colors hover:text-brand-accent sm:text-[1.65rem] sm:tracking-[0.22em] lg:text-[2rem]"
+            className="col-start-2 min-w-0 max-w-full justify-self-center truncate px-1 font-display text-[1.15rem] font-medium tracking-[0.14em] text-foreground transition-colors hover:text-brand-accent sm:text-[1.65rem] sm:tracking-[0.22em] lg:text-[2rem]"
           >
             UMMATI
           </Link>
