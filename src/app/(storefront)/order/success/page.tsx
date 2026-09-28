@@ -1,17 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
-import { CheckCircle } from 'lucide-react'
+import { Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function OrderSuccessPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] container-brand py-12 text-center">
-      <div className="mb-8">
-        <CheckCircle className="h-20 w-20 text-[#C8A96E] mx-auto" />
+      <div className="mb-8 flex size-24 items-center justify-center rounded-full border border-brand-accent/40 bg-brand-accent/10">
+        <Check className="size-12 text-brand-accent" strokeWidth={1.2} />
       </div>
-      
-      <h1 className="font-display text-4xl md:text-5xl text-[#F0E8D8] mb-6">
-        Payment Successful
+      <p className="mb-4 text-label text-brand-accent">Order confirmed</p>
+      <h1 className="font-display text-4xl text-foreground md:text-6xl">
+        Thank you
       </h1>
       
       <div className="max-w-md mx-auto mb-10">
