@@ -17,6 +17,11 @@ const nextConfig: NextConfig = {
         hostname: '*.amazonaws.com',      // AWS S3 backup images
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',   // Curated preview imagery
+        pathname: '/**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [375, 640, 768, 1024, 1280, 1536],
