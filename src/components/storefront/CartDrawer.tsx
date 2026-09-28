@@ -68,7 +68,16 @@ export function CartDrawer() {
           <SheetFooter className="border-t border-hairline bg-bg-surface/70 px-6 py-6">
             <div className="w-full space-y-5">
               <div className="flex items-end justify-between"><span className="text-label text-text-muted">Subtotal</span><span className="font-display text-3xl font-light text-foreground">{formatPrice(subtotal)}</span></div>
-              <p className="text-xs leading-relaxed text-text-muted">Shipping and taxes are calculated at checkout. Complimentary delivery over ₹999.</p>
+              <div aria-live="polite" className="space-y-2">
+                <div className="flex justify-between text-xs text-text-muted">
+                  <span>{subtotal >= 99900 ? 'Complimentary delivery unlocked' : `Add ${formatPrice(99900 - subtotal)} for complimentary delivery`}</span>
+                  <span>{Math.min(100, Math.round((subtotal / 99900) * 100))}%</span>
+                </div>
+                <div className="h-1 overflow-hidden bg-bg-elevated" role="progressbar" aria-valuemin={0} aria-valuemax={99900} aria-valuenow={Math.min(subtotal, 99900)} aria-label="Free shipping progress">
+                  <div className="h-full bg-brand-accent transition-[width] duration-500" style={{ width: `${Math.min(100, (subtotal / 99900) * 100)}%` }} />
+                </div>
+              </div>
+              <p className="text-xs leading-relaxed text-text-muted">Shipping and taxes are calculated at checkout.</p>
               <Link href="/checkout" onClick={() => setIsOpen(false)} className="flex h-14 w-full items-center justify-center gap-3 bg-brand-accent text-label text-primary-foreground transition-colors hover:bg-foreground hover:text-background">Continue to checkout <ArrowRight /></Link>
             </div>
           </SheetFooter>

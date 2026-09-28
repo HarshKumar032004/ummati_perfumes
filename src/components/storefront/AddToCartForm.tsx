@@ -77,10 +77,10 @@ export function AddToCartForm({ product }: { product: Product }) {
       )}
 
       <div className="mt-8 flex items-center gap-4">
-        <div className="flex h-14 items-center border border-hairline">
-          <button type="button" aria-label="Decrease quantity" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={isOutOfStock} className="flex h-full w-11 items-center justify-center text-text-muted transition-colors hover:text-brand-accent disabled:opacity-30"><Minus className="h-3.5 w-3.5" strokeWidth={1.2} /></button>
-          <span className="w-8 text-center text-sm text-foreground">{quantity}</span>
-          <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => selectedVariant ? Math.min(current + 1, selectedVariant.stock) : current + 1)} disabled={isOutOfStock || Boolean(selectedVariant && quantity >= selectedVariant.stock)} className="flex h-full w-11 items-center justify-center text-text-muted transition-colors hover:text-brand-accent disabled:opacity-30"><Plus className="h-3.5 w-3.5" strokeWidth={1.2} /></button>
+        <div className="flex h-14 items-center border border-hairline" aria-label="Quantity">
+          <button type="button" aria-label="Decrease quantity" onClick={() => setQuantity(Math.max(1, quantity - 1))} disabled={isOutOfStock || quantity <= 1} className="flex h-full w-11 items-center justify-center text-text-muted transition-colors hover:text-brand-accent disabled:cursor-not-allowed disabled:opacity-30"><Minus className="h-3.5 w-3.5" strokeWidth={1.2} /></button>
+          <span className="w-8 text-center text-sm text-foreground" aria-live="polite">{quantity}</span>
+          <button type="button" aria-label="Increase quantity" onClick={() => setQuantity((current) => selectedVariant ? Math.min(current + 1, selectedVariant.stock) : current + 1)} disabled={isOutOfStock || Boolean(selectedVariant && quantity >= selectedVariant.stock)} className="flex h-full w-11 items-center justify-center text-text-muted transition-colors hover:text-brand-accent disabled:cursor-not-allowed disabled:opacity-30"><Plus className="h-3.5 w-3.5" strokeWidth={1.2} /></button>
         </div>
         <button type="button" onClick={handleAddToCart} disabled={isOutOfStock || isAdding} className="flex h-14 flex-1 items-center justify-center gap-3 bg-brand-accent px-5 text-label text-primary-foreground transition-all duration-300 hover:bg-foreground hover:text-background disabled:cursor-not-allowed disabled:opacity-40">
           {isAdding ? <span className="h-4 w-4 animate-spin rounded-full border border-current border-t-transparent" /> : <ShoppingBag className="h-4 w-4" strokeWidth={1.3} />}

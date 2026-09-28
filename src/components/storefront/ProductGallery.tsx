@@ -23,7 +23,17 @@ export function ProductGallery({ images }: ProductGalleryProps) {
 
   return (
     <div className="lg:sticky lg:top-32">
-      <div className="group relative aspect-[4/5] overflow-hidden bg-bg-surface">
+      <div
+        className="group relative aspect-[4/5] overflow-hidden bg-bg-surface"
+        role="region"
+        aria-label="Product image gallery"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1) }
+          if (event.key === 'ArrowRight') { event.preventDefault(); move(1) }
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); setLightboxOpen(true) }
+        }}
+      >
         <button type="button" onClick={() => setLightboxOpen(true)} className="absolute right-4 top-4 z-10 flex size-10 items-center justify-center border border-white/30 bg-black/20 text-white opacity-0 backdrop-blur transition-opacity group-hover:opacity-100 focus:opacity-100" aria-label="Open image gallery">
           <ZoomIn className="size-4" />
         </button>
