@@ -10,17 +10,23 @@ import { Redis } from '@upstash/redis';
 const UPSTASH_REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
 const UPSTASH_REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
 
-if (!UPSTASH_REDIS_URL || !UPSTASH_REDIS_TOKEN) {
-  throw new Error(
-    'UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN must be defined in .env.local'
-  );
-}
+// Redis is optional in local previews. Consumers can fall back gracefully when
+// the Upstash integration has not been configured yet.
+export const upstashClient =
+  UPSTASH_REDIS_URL && UPSTASH_REDIS_TOKEN
+    ? new Redis({
+        url: UPSTASH_REDIS_URL,
+        token: UPSTASH_REDIS_TOKEN,
+      })
+    : null;
 
-// Create the stateless HTTP client
-export const upstashClient = new Redis({
-  url: UPSTASH_REDIS_URL,
-  token: UPSTASH_REDIS_TOKEN,
-});
+function getRedisClient(): Redis {
+  if (!upstashClient) {
+    throw new Error('Upstash Redis is not configured');
+  }
+
+  return upstashClient;
+}
 
 /**
  * We export a wrapper that maps standard ioredis method signatures to @upstash/redis syntax.
@@ -28,15 +34,15 @@ export const upstashClient = new Redis({
  */
 const redis = {
   get: async (key: string) => {
-    return await upstashClient.get<string | number>(key);
+    return await getRedisClient().get<string | number>(key);
   },
   
   del: async (...keys: string[]) => {
-    return await upstashClient.del(...keys);
+    return await getRedisClient().del(...keys);
   },
   
   setex: async (key: string, ttl: number, value: any) => {
-    return await upstashClient.setex(key, ttl, value);
+    return await getRedisClient().setex(key, ttl, value);
   },
   
   set: async (key: string, value: any, opt1?: string, ttl?: number, opt2?: string) => {
@@ -52,9 +58,9 @@ const redis = {
     }
 
     if (Object.keys(options).length > 0) {
-      return await upstashClient.set(key, value, options);
+      return await getRedisClient().set(key, value, options);
     }
-    return await upstashClient.set(key, value);
+    return await getRedisClient().set(key, value);
   }
 };
 
@@ -64,27 +70,27 @@ export default redis;
 
 export async function setJSON<T>(key: string, value: T, ttlSeconds?: number): Promise<void> {
   if (ttlSeconds) {
-    await upstashClient.set(key, value, { ex: ttlSeconds });
+    await getRedisClient().set(key, value, { ex: ttlSeconds });
   } else {
-    await upstashClient.set(key, value);
+    await getRedisClient().set(key, value);
   }
 }
 
 export async function getJSON<T>(key: string): Promise<T | null> {
-  const raw = await upstashClient.get<T>(key);
+  const raw = await getRedisClient().get<T>(key);
   if (!raw) return null;
   return raw as T;
 }
 
 export async function deleteKeys(...keys: string[]): Promise<void> {
-  if (keys.length > 0) await upstashClient.del(...keys);
+  if (keys.length > 0) await getRedisClient().del(...keys);
 }
 
 export async function acquireLock(key: string, value: string, ttlSeconds: number): Promise<boolean> {
-  const result = await upstashClient.set(key, value, { ex: ttlSeconds, nx: true });
+  const result = await getRedisClient().set(key, value, { ex: ttlSeconds, nx: true });
   return result === 'OK';
 }
 
 export async function releaseLock(key: string): Promise<void> {
-  await upstashClient.del(key);
+  await getRedisClient().del(key);
 }
