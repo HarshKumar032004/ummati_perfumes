@@ -11,6 +11,12 @@ import { Sheet, SheetBody, SheetClose, SheetContent } from '@/components/ui/shee
 import { useCartCount, useCartStore } from '@/store/useCartStore'
 import { CartDrawer } from '@/components/storefront/CartDrawer'
 
+const announcements = [
+  'Complimentary shipping across India on orders above ₹1,999',
+  'A considered study in scent, made in small batches',
+  'Complimentary samples with every first order',
+]
+
 const navLinks = [
   { label: 'Collections', href: '/shop' },
   { label: 'The Ateliers', href: '/about' },
@@ -63,6 +69,8 @@ export function Navbar() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [announcementIndex, setAnnouncementIndex] = useState(0)
+  const [announcementVisible, setAnnouncementVisible] = useState(true)
   const mounted = useSyncExternalStore(() => () => undefined, () => true, () => false)
   const openCart = useCartStore((state) => state.openCart)
   const cartCount = useCartCount()
@@ -73,11 +81,26 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    if (!announcementVisible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const timer = window.setInterval(() => setAnnouncementIndex((index) => (index + 1) % announcements.length), 6000)
+    return () => window.clearInterval(timer)
+  }, [announcementVisible])
+
   return (
     <>
-      <div className="border-b border-hairline bg-bg-surface px-4 py-2 text-center">
-        <p className="text-label text-text-muted">Complimentary delivery across India on orders over ₹999</p>
-      </div>
+      {announcementVisible && (
+        <div
+          className="group relative border-b border-hairline bg-bg-surface px-10 py-2 text-center"
+          onMouseEnter={() => undefined}
+          aria-live="polite"
+        >
+          <p className="text-label text-text-muted">{announcements[announcementIndex]}</p>
+          <button type="button" aria-label="Dismiss announcement" onClick={() => setAnnouncementVisible(false)} className="absolute right-3 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center text-text-muted transition-colors hover:text-brand-accent">
+            <X className="size-3.5" strokeWidth={1.2} />
+          </button>
+        </div>
+      )}
 
       <motion.header
         initial={{ opacity: 0, y: -16 }}

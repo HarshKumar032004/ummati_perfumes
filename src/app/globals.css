@@ -33,7 +33,10 @@
   --color-text-muted: var(--text-muted);
   --color-brand-accent: var(--brand-accent);
   --color-hairline: var(--hairline);
-
+  --color-brand-accent-soft: var(--brand-accent-soft);
+  --color-overlay: var(--overlay);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
   --ease-luxury: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -46,6 +49,10 @@
   --text-secondary: #57534E;
   --text-muted: #78716C;
   --brand-accent: #9E7D47;
+  --brand-accent-soft: rgba(158, 125, 71, 0.12);
+  --overlay: rgba(28, 25, 23, 0.4);
+  --success: #55745B;
+  --danger: #9B5E55;
   --hairline: rgba(28, 25, 23, 0.08);
   --background: 251 249 245;
   --foreground: 28 25 23;
@@ -76,6 +83,10 @@
   --text-secondary: #D6D0C6;
   --text-muted: #A8A29E;
   --brand-accent: #C8A96E;
+  --brand-accent-soft: rgba(200, 169, 110, 0.14);
+  --overlay: rgba(0, 0, 0, 0.42);
+  --success: #9DB69A;
+  --danger: #D18F84;
   --hairline: rgba(245, 242, 235, 0.08);
   --background: 11 10 9;
   --foreground: 245 242 235;
