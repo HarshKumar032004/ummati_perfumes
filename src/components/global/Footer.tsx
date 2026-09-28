@@ -24,12 +24,12 @@ export function Footer() {
 
   return (
     <footer className="border-t border-hairline bg-bg-surface">
-      <div className="container-brand py-20 lg:py-28">
-        <div className="mb-16 max-w-3xl">
+      <div className="container-brand py-14 sm:py-20 lg:py-28">
+        <div className="mb-12 max-w-3xl sm:mb-16">
           <p className="text-label text-brand-accent">The Ummati journal</p>
-          <h2 className="mt-4 font-display text-4xl font-light leading-none tracking-tight text-foreground sm:text-5xl">Scent, memory, and the rituals that make a fragrance yours.</h2>
+          <h2 className="mt-4 max-w-[18ch] font-display text-3xl font-light leading-[1.05] tracking-tight text-foreground sm:text-5xl">Scent, memory, and the rituals that make a fragrance yours.</h2>
         </div>
-        <div className="grid gap-16 lg:grid-cols-[1.6fr_0.7fr_0.7fr_1fr] lg:gap-10">
+        <div className="grid gap-12 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-14 lg:grid-cols-[1.6fr_0.7fr_0.7fr_1fr] lg:gap-10">
           <div>
             <Link href="/" className="font-display text-3xl tracking-[0.2em] text-foreground transition-colors hover:text-brand-accent">UMMATI</Link>
             <p className="mt-6 max-w-sm text-sm leading-[1.8] text-text-muted">A quiet study in scent, memory, and the rituals that make a fragrance yours.</p>
@@ -67,8 +67,8 @@ export function Footer() {
       <div className="border-t border-hairline">
         <div className="container-brand flex flex-col gap-3 py-5 text-xs text-text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {year} {siteConfig.name}. All rights reserved.</p>
-          <div className="flex gap-5"><Link href="/privacy-policy" className="hover:text-foreground">Privacy</Link><Link href="/terms" className="hover:text-foreground">Terms</Link></div>
-          <p className="text-brand-accent">Made in India · Worn everywhere</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2"><Link href="/privacy-policy" className="hover:text-foreground">Privacy</Link><Link href="/terms" className="hover:text-foreground">Terms</Link></div>
+          <p className="text-brand-accent sm:text-right">Made in India · Worn everywhere</p>
         </div>
       </div>
     </footer>
