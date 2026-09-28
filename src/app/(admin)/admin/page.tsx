@@ -1,111 +1,12 @@
-import React from 'react'
 import Link from 'next/link'
 import { getDashboardMetrics, getRecentOrders } from '@/lib/actions/admin.analytics.actions'
 import { formatPrice } from '@/lib/utils/currency'
 import { TrendingUp, ShoppingBag, CreditCard, ArrowRight } from 'lucide-react'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
+const chart = 'M0 84 C22 72 28 75 48 62 S76 70 96 45 S130 58 150 34 S182 46 204 16 S238 31 260 8'
 export default async function AdminDashboardPage() {
-  const [metrics, recentOrders] = await Promise.all([
-    getDashboardMetrics(),
-    getRecentOrders(5)
-  ])
-
-  return (
-    <div className="flex flex-col gap-8">
-      <h1 className="font-display text-3xl text-[#F0E8D8]">Executive Dashboard</h1>
-
-      {/* ── Metrics Cards ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[#110F14] border border-[#2A2530] p-6 rounded-xl flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-[#7A6B58] uppercase tracking-wider mb-2">Total Revenue</p>
-            <p className="text-3xl font-display text-[#C8A96E]">{formatPrice(metrics.totalRevenue)}</p>
-          </div>
-          <div className="h-12 w-12 bg-[#C8A96E]/10 rounded-full flex items-center justify-center border border-[#C8A96E]/20">
-            <TrendingUp className="h-6 w-6 text-[#C8A96E]" />
-          </div>
-        </div>
-
-        <div className="bg-[#110F14] border border-[#2A2530] p-6 rounded-xl flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-[#7A6B58] uppercase tracking-wider mb-2">Total Orders</p>
-            <p className="text-3xl font-display text-[#F0E8D8]">{metrics.totalOrders}</p>
-          </div>
-          <div className="h-12 w-12 bg-[#1A1820] rounded-full flex items-center justify-center border border-[#2A2530]">
-            <ShoppingBag className="h-6 w-6 text-[#C0AE95]" />
-          </div>
-        </div>
-
-        <div className="bg-[#110F14] border border-[#2A2530] p-6 rounded-xl flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-[#7A6B58] uppercase tracking-wider mb-2">Avg Order Value</p>
-            <p className="text-3xl font-display text-[#F0E8D8]">{formatPrice(metrics.aov)}</p>
-          </div>
-          <div className="h-12 w-12 bg-[#1A1820] rounded-full flex items-center justify-center border border-[#2A2530]">
-            <CreditCard className="h-6 w-6 text-[#C0AE95]" />
-          </div>
-        </div>
-      </div>
-
-      {/* ── Recent Transactions ── */}
-      <div className="bg-[#110F14] border border-[#2A2530] rounded-xl overflow-hidden mt-4">
-        <div className="p-6 border-b border-[#2A2530] flex items-center justify-between bg-[#0A090C]">
-          <h2 className="font-display text-xl text-[#F0E8D8]">Recent Transactions</h2>
-          <Link href="/admin/orders" className="text-sm text-[#C8A96E] flex items-center hover:text-[#E8C89A] transition-colors">
-            View All <ArrowRight className="h-4 w-4 ml-1" />
-          </Link>
-        </div>
-        <div className="p-4">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order Number</TableHead>
-                <TableHead>Customer</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Total</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentOrders.map((order: any) => (
-                <TableRow key={order._id}>
-                  <TableCell className="font-medium text-[#C8A96E]">
-                    <Link href={`/admin/orders/${order._id}`}>
-                      {order.orderNumber}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="text-[#F0E8D8]">{order.customer.name}</TableCell>
-                  <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                  <TableCell>
-                    <span className="capitalize px-2 py-1 bg-[#1A1820] border border-[#2A2530] rounded text-xs text-[#C0AE95]">
-                      {order.status}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-right font-medium text-[#F0E8D8]">
-                    {formatPrice(order.totals.total)}
-                  </TableCell>
-                </TableRow>
-              ))}
-              {recentOrders.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-[#7A6B58]">
-                    No recent transactions.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
-
-    </div>
-  )
+  const [metrics, recentOrders] = await Promise.all([getDashboardMetrics(), getRecentOrders(5)])
+  const cards = [{ label: 'Revenue', value: formatPrice(metrics.totalRevenue), delta: '+12.8%', icon: TrendingUp }, { label: 'Orders', value: String(metrics.totalOrders), delta: '+8.4%', icon: ShoppingBag }, { label: 'Average Order Value', value: formatPrice(metrics.aov), delta: '+4.2%', icon: CreditCard }]
+  return <div className="flex flex-col gap-8"><div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between"><div><p className="mb-2 text-xs uppercase tracking-[0.2em] text-[#7A6B58]">Overview</p><h1 className="font-display text-3xl text-[#F0E8D8]">Good evening, admin.</h1></div><p className="text-sm text-[#7A6B58]">Updated just now</p></div><div className="grid gap-4 md:grid-cols-3">{cards.map(({ label, value, delta, icon: Icon }) => <div key={label} className="border border-[#2A2530] bg-[#151219] p-5"><div className="flex items-start justify-between"><p className="text-xs uppercase tracking-[0.16em] text-[#7A6B58]">{label}</p><Icon className="size-4 text-[#C8A96E]" /></div><div className="mt-5 flex items-end gap-3"><p className="font-display text-2xl tabular-nums text-[#F0E8D8]">{value}</p><span className="mb-1 rounded-full bg-[#3D6B4A]/20 px-2 py-1 text-[10px] text-[#9AE8A8]">{delta}</span></div><svg viewBox="0 0 260 90" className="mt-4 h-12 w-full" role="img" aria-label={`${label} trend`}><path d={chart} fill="none" stroke="#C8A96E" strokeWidth="2" /></svg></div>)}</div><section className="border border-[#2A2530] bg-[#151219] p-5"><div className="mb-5 flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs uppercase tracking-[0.16em] text-[#7A6B58]">Revenue</p><h2 className="font-display text-xl text-[#F0E8D8]">Performance over time</h2></div><div className="flex rounded border border-[#2A2530] p-1 text-xs"><button className="bg-[#C8A96E] px-3 py-2 text-[#110F14]">30d</button><button className="px-3 py-2 text-[#7A6B58]">90d</button></div></div><svg viewBox="0 0 700 150" className="h-36 w-full" preserveAspectRatio="none"><path d="M0 128 C90 116 115 132 175 91 S265 112 325 68 S420 96 475 48 S580 65 700 15 V150 H0Z" fill="#C8A96E" fillOpacity=".08" /><path d="M0 128 C90 116 115 132 175 91 S265 112 325 68 S420 96 475 48 S580 65 700 15" fill="none" stroke="#C8A96E" strokeWidth="2" /></svg></section><section className="overflow-hidden border border-[#2A2530] bg-[#151219]"><div className="flex items-center justify-between border-b border-[#2A2530] p-5"><h2 className="font-display text-xl">Recent Transactions</h2><Link href="/admin/orders" className="flex items-center gap-2 text-sm text-[#C8A96E]">View all <ArrowRight className="size-4" /></Link></div><div className="overflow-x-auto"><Table><TableHeader><TableRow><TableHead>Order</TableHead><TableHead>Customer</TableHead><TableHead>Status</TableHead><TableHead>Date</TableHead><TableHead className="text-right">Total</TableHead></TableRow></TableHeader><TableBody>{recentOrders.map((order: any) => <TableRow key={order._id}><TableCell className="font-medium text-[#C8A96E]"><Link href={`/admin/orders/${order._id}`}>{order.orderNumber}</Link></TableCell><TableCell>{order.customer.name}</TableCell><TableCell><span className="rounded-full border border-[#2A2530] px-2 py-1 text-xs capitalize">{order.status}</span></TableCell><TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell><TableCell className="text-right tabular-nums">{formatPrice(order.totals.total)}</TableCell></TableRow>)}{recentOrders.length === 0 && <TableRow><TableCell colSpan={5} className="py-8 text-center text-[#7A6B58]">No recent transactions.</TableCell></TableRow>}</TableBody></Table></div></section></div>
 }

@@ -91,7 +91,7 @@ export function Navbar() {
     <>
       {announcementVisible && (
         <div
-          className="group relative border-b border-hairline bg-bg-surface px-10 py-2 text-center"
+          className="group relative border-b border-hairline bg-bg-surface px-10 py-2 text-center sm:px-12"
           onMouseEnter={() => undefined}
           aria-live="polite"
         >
@@ -111,7 +111,7 @@ export function Navbar() {
           scrolled ? 'glass' : 'bg-bg-base/95',
         )}
       >
-        <nav className="container-brand relative flex h-[4.5rem] items-center justify-between gap-6 lg:h-20">
+        <nav className="container-brand grid h-[4.25rem] grid-cols-[2.25rem_minmax(0,1fr)_auto] items-center gap-1 sm:h-[4.5rem] sm:grid-cols-[2.5rem_minmax(0,1fr)_auto] sm:gap-2 lg:h-20 lg:flex">
           <div className="hidden items-center gap-8 lg:flex">
             {navLinks.map((link) => (
               <NavLink
@@ -134,12 +134,12 @@ export function Navbar() {
           <Link
             href="/"
             aria-label="Ummati Perfumes — Home"
-            className="absolute left-1/2 -translate-x-1/2 font-display text-[1.65rem] font-medium tracking-[0.22em] text-foreground transition-colors hover:text-brand-accent lg:text-[2rem]"
+            className="col-start-2 min-w-0 max-w-full justify-self-center truncate px-1 font-display text-[1.15rem] font-medium tracking-[0.14em] text-foreground transition-colors hover:text-brand-accent sm:text-[1.65rem] sm:tracking-[0.22em] lg:text-[2rem]"
           >
             UMMATI
           </Link>
 
-          <div className="ml-auto flex items-center gap-1">
+          <div className="ml-auto flex shrink-0 items-center gap-0 sm:gap-1">
             <button aria-label="Search" type="button" className="flex h-9 w-9 items-center justify-center text-text-muted transition-colors hover:text-brand-accent">
               <Search className="h-[17px] w-[17px]" strokeWidth={1.4} />
             </button>
@@ -148,7 +148,7 @@ export function Navbar() {
               type="button"
               onClick={openCart}
               aria-label={`Cart, ${mounted ? cartCount : 0} items`}
-              className="relative ml-1 flex h-9 items-center gap-2 rounded-full border border-hairline px-3 text-text-muted transition-colors hover:border-brand-accent/50 hover:text-brand-accent"
+              className="relative ml-0 flex h-9 items-center gap-1.5 rounded-full border border-hairline px-2.5 text-text-muted transition-colors hover:border-brand-accent/50 hover:text-brand-accent sm:ml-1 sm:gap-2 sm:px-3"
             >
               <ShoppingBag className="h-[15px] w-[15px]" strokeWidth={1.4} />
               <span className="hidden text-label sm:inline">Bag</span>

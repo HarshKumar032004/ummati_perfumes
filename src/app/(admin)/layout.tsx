@@ -2,86 +2,39 @@ import React from 'react'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getSession } from '@/lib/auth/session'
-import { LogOut, Package, ShoppingCart, LayoutDashboard, Menu } from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger, SheetBody } from '@/components/ui/sheet'
+import { LogOut, Package, ShoppingCart, LayoutDashboard, Menu, Users, Settings } from 'lucide-react'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  // Security Guard
   const session = await getSession()
-  if (!session || session.role !== 'admin') {
-    redirect('/?login=true')
-  }
+  if (!session || session.role !== 'admin') redirect('/?login=true')
 
-  const navLinks = [
-    { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
-    { name: 'Products', href: '/admin/products', icon: Package },
-    { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+  type NavLink = { name: string; href: string; icon: typeof LayoutDashboard; disabled?: boolean }
+  const navGroups: { label: string; links: NavLink[] }[] = [
+    { label: 'Workspace', links: [
+      { name: 'Overview', href: '/admin', icon: LayoutDashboard },
+      { name: 'Products', href: '/admin/products', icon: Package },
+      { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
+    ]},
+    { label: 'Coming soon', links: [
+      { name: 'Customers', href: '#', icon: Users, disabled: true },
+      { name: 'Settings', href: '#', icon: Settings, disabled: true },
+    ]},
   ]
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-[#0A090C] border-r border-[#1F1C23]">
-      <div className="p-6 border-b border-[#1F1C23]">
-        <Link href="/admin" className="font-display text-xl tracking-widest text-[#F0E8D8]">
-          UMMATI<span className="text-[#8A7148] ml-2 text-xs">ADMIN</span>
-        </Link>
+    <div className="flex h-full flex-col border-r border-[#2A2530] bg-[#0A090C]">
+      <div className="border-b border-[#2A2530] p-6">
+        <Link href="/admin" className="font-display text-xl tracking-[0.22em] text-[#F0E8D8]">UMMATI<span className="ml-2 text-[10px] tracking-[0.16em] text-[#C8A96E]">ADMIN</span></Link>
       </div>
-      <nav className="flex-1 p-4 space-y-2">
-        {navLinks.map((link) => {
-          const Icon = link.icon
-          return (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-md text-[#C0AE95] hover:bg-[#1A1820] hover:text-[#F0E8D8] transition-colors"
-            >
-              <Icon className="h-4 w-4" />
-              {link.name}
-            </Link>
-          )
-        })}
+      <nav className="flex-1 space-y-7 p-4" aria-label="Admin navigation">
+        {navGroups.map((group) => <div key={group.label} className="space-y-2"><p className="px-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#7A6B58]">{group.label}</p>{group.links.map((link) => { const Icon = link.icon; return <Link key={link.name} href={link.href} aria-disabled={link.disabled} className={`flex items-center gap-3 border-l-2 px-4 py-3 text-sm transition-colors ${link.disabled ? 'pointer-events-none border-transparent text-[#514A52]' : 'border-transparent text-[#C0AE95] hover:border-[#C8A96E] hover:bg-[#1A1820] hover:text-[#F0E8D8]'}`}><Icon className="size-4" />{link.name}{link.disabled && <span className="ml-auto text-[9px] uppercase tracking-wider">Soon</span>}</Link> })}</div>)}
       </nav>
-      <div className="p-4 border-t border-[#1F1C23]">
-        <button className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium rounded-md text-[#E89A9A] hover:bg-[#1A1820]/50 transition-colors">
-          <LogOut className="h-4 w-4" />
-          Logout
-        </button>
-      </div>
+      <div className="border-t border-[#2A2530] p-4"><button className="flex min-h-11 w-full items-center gap-3 px-4 text-sm text-[#C0AE95] transition-colors hover:text-[#E89A9A]"><LogOut className="size-4" />Logout</button></div>
     </div>
   )
 
-  return (
-    <div className="flex min-h-screen bg-[#110F14] text-[#F0E8D8]">
-      
-      {/* ── Desktop Sidebar ── */}
-      <aside className="hidden md:flex w-64 flex-col fixed inset-y-0">
-        <SidebarContent />
-      </aside>
-
-      {/* ── Main Content Area ── */}
-      <div className="flex flex-col flex-1 md:pl-64">
-        
-        {/* Mobile Header */}
-        <header className="flex items-center justify-between p-4 border-b border-[#1F1C23] md:hidden bg-[#0A090C]">
-          <span className="font-display tracking-widest text-lg">UMMATI ADMIN</span>
-          <Sheet>
-            <SheetTrigger asChild>
-              <button className="p-2 -mr-2 text-[#C0AE95]">
-                <Menu className="h-5 w-5" />
-              </button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-64 p-0 bg-[#0A090C]" showClose={false}>
-              <SidebarContent />
-            </SheetContent>
-          </Sheet>
-        </header>
-
-        <main className="flex-1 p-6 md:p-8">
-          {children}
-        </main>
-      </div>
-
-    </div>
-  )
+  return <div className="min-h-screen bg-[#110F14] text-[#F0E8D8]"><aside className="fixed inset-y-0 z-20 hidden w-64 md:flex"><SidebarContent /></aside><div className="flex min-h-screen flex-col md:pl-64"><header className="flex min-h-16 items-center justify-between border-b border-[#2A2530] bg-[#0A090C] px-4 md:hidden"><span className="font-display tracking-[0.18em]">UMMATI <span className="text-[#C8A96E]">ADMIN</span></span><Sheet><SheetTrigger asChild><button className="flex size-11 items-center justify-center text-[#C0AE95]" aria-label="Open admin navigation"><Menu className="size-5" /></button></SheetTrigger><SheetContent side="left" className="w-64 bg-[#0A090C] p-0"><SidebarContent /></SheetContent></Sheet></header><main className="flex-1 p-4 sm:p-6 md:p-8"><div className="mx-auto max-w-[1560px]">{children}</div></main></div></div>
 }

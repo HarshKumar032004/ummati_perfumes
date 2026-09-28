@@ -1,118 +1,53 @@
 import Link from 'next/link'
+import { ArrowUpRight, Check, Star } from 'lucide-react'
 import { Suspense } from 'react'
-import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { getFeaturedProducts } from '@/lib/actions/product.actions'
 import { Hero3D } from '@/components/storefront/Hero3D'
 import { ProductCard, ProductCardSkeleton } from '@/components/storefront/ProductCard'
 
+const notes = ['Oud', 'Rose', 'Musk', 'Amber', 'Sandalwood', 'Citrus / Fresh']
+const testimonials = [
+  ['A quiet, exquisite trail. It feels like wearing a memory.', 'Aarav Mehta', 'Mumbai'],
+  ['The Oud Kannauj is intimate at first, then unforgettable.', 'Nadia Khan', 'Delhi'],
+  ['Beautifully made, never loud. Ummati understands restraint.', 'Leila Rahman', 'London'],
+]
+
 export default async function Homepage() {
-  const featuredProducts = await getFeaturedProducts(4)
+  const featuredProducts = await getFeaturedProducts(8)
+  const editorialImage = featuredProducts[1]?.images.find((image) => image.isPrimary) ?? featuredProducts[1]?.images[0]
+  const bestSellers = featuredProducts.filter((product) => product.isBestSeller)
+  const bestSellerProducts = [...bestSellers, ...featuredProducts].filter((product, index, products) => products.findIndex((item) => item._id === product._id) === index).slice(0, 5)
+  const cinematicImage = featuredProducts[2]?.images[0] ?? editorialImage
 
   return (
     <div className="overflow-hidden">
       <section className="border-b border-hairline bg-bg-base">
-        <div className="grid min-h-[calc(100vh-8rem)] grid-cols-1 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="container-brand flex flex-col justify-center py-20 lg:col-start-1 lg:py-28 lg:pr-12 xl:pr-24">
-            <div className="max-w-xl">
-              <p className="text-label mb-8 text-brand-accent">Parfum d&apos;exception · Est. 2024</p>
-              <h1 className="text-display-2xl text-foreground">
-                A memory,
-                <br />
-                <em className="text-brand-accent">made visible.</em>
-              </h1>
-              <p className="mt-10 max-w-md text-base leading-[1.8] text-text-muted lg:text-lg">
-                Compositions for the considered life. Rare botanicals, patient maceration, and a quiet confidence that stays close to the skin.
-              </p>
-              <div className="mt-12 flex flex-wrap items-center gap-6">
-                <Link href="/shop" className="group inline-flex items-center gap-4 border border-brand-accent bg-brand-accent px-6 py-4 text-label text-primary-foreground transition-colors duration-300 hover:bg-transparent hover:text-brand-accent">
-                  Explore the collection
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.3} />
-                </Link>
-                <Link href="/about" className="luxury-link text-label text-text-muted transition-colors hover:text-brand-accent">Our philosophy</Link>
-              </div>
-            </div>
-            <div className="mt-20 flex items-center gap-4 text-text-muted">
-              <ArrowDownRight className="h-4 w-4 text-brand-accent" strokeWidth={1.2} />
-              <span className="text-label">Scroll to enter the atelier</span>
-            </div>
+        <div className="grid min-h-[calc(100vh-8rem)] grid-cols-1 lg:grid-cols-12">
+          <div className="container-brand flex flex-col justify-center py-20 lg:col-span-6 lg:py-28 lg:pr-12 xl:pr-24">
+            <div className="max-w-xl"><p className="text-label mb-8 text-brand-accent">Attars &amp; Eaux · Est. in Kannauj lineage</p><h1 className="text-display-2xl text-foreground">The art of <em className="text-brand-accent">lingering.</em></h1><p className="mt-10 max-w-md text-base leading-[1.8] text-text-muted lg:text-lg">Rare botanicals, patient maceration, and a quiet confidence that stays close to the skin.</p><div className="mt-12 flex flex-wrap items-center gap-6"><Link href="/shop" className="group inline-flex items-center gap-4 border border-brand-accent bg-brand-accent px-6 py-4 text-label text-primary-foreground transition-colors duration-300 hover:bg-transparent hover:text-brand-accent">Explore the collection <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={1.3} /></Link><Link href="/about" className="luxury-link text-label text-text-muted transition-colors hover:text-brand-accent">Discover our ateliers</Link></div></div>
+            <div className="mt-20 flex items-center gap-4 text-text-muted"><span className="text-label">Scroll</span><span className="h-px w-16 bg-brand-accent" /></div>
           </div>
-
-          <div className="relative min-h-[31rem] border-t border-hairline lg:border-l lg:border-t-0">
-            <Suspense fallback={<div className="h-full min-h-[31rem] bg-bg-surface" />}>
-              <Hero3D />
-            </Suspense>
-            <div className="absolute right-5 top-5 hidden text-right sm:block">
-              <p className="text-label text-text-muted">No. 01</p>
-              <p className="mt-2 font-display text-xl font-light text-foreground">Sillage study</p>
-            </div>
-          </div>
-        </div>
-        <div className="container-brand grid grid-cols-2 border-t border-hairline py-8 sm:grid-cols-4">
-          {[
-            ['01', 'Kannauj attar'],
-            ['02', 'Small-batch blend'],
-            ['03', 'Made to linger'],
-            ['04', 'India, always'],
-          ].map(([number, label]) => (
-            <div key={number} className="flex items-center gap-3 border-r border-hairline px-4 first:pl-0 last:border-0 sm:px-6">
-              <span className="text-label text-brand-accent">{number}</span>
-              <span className="text-xs text-text-muted">{label}</span>
-            </div>
-          ))}
+          <div className="relative min-h-[31rem] border-t border-hairline lg:col-span-6 lg:border-l lg:border-t-0"><Suspense fallback={<div className="h-full min-h-[31rem] bg-bg-surface" />}><Hero3D /></Suspense><div className="absolute right-5 top-5 text-right"><p className="text-label text-text-muted">No. 07</p><p className="mt-2 font-display text-xl font-light text-foreground">Oud Kannauj</p></div></div>
         </div>
       </section>
 
-      <section className="container-brand py-28 lg:py-40">
-        <div className="mb-14 flex flex-col justify-between gap-8 md:flex-row md:items-end">
-          <div>
-            <p className="text-label mb-5 text-brand-accent">The edit</p>
-            <h2 className="text-display-lg text-foreground">Objects of desire.</h2>
-          </div>
-          <p className="max-w-xs text-sm leading-relaxed text-text-muted md:text-right">Four studies in atmosphere, composed for the moments you choose to keep.</p>
-        </div>
-        <div className="grid grid-cols-2 gap-x-4 gap-y-16 md:grid-cols-4 md:gap-x-7">
-          {featuredProducts.length > 0 ? featuredProducts.map((product, index) => (
-            <ProductCard key={product._id} product={product} priority={index < 4} />
-          )) : Array.from({ length: 4 }).map((_, index) => <ProductCardSkeleton key={index} />)}
-        </div>
-        <div className="mt-16 flex justify-center">
-          <Link href="/shop" className="luxury-link inline-flex items-center gap-3 text-label text-text-muted transition-colors hover:text-brand-accent">
-            View all fragrances <ArrowUpRight className="h-4 w-4" strokeWidth={1.2} />
-          </Link>
-        </div>
-      </section>
+      <section className="container-brand py-24 lg:py-32"><p className="max-w-5xl font-display text-4xl font-light leading-[1.08] tracking-[-0.025em] text-foreground md:text-6xl">A perfume can be a place. <span className="text-brand-accent">Ours begin in Kannauj</span>, then travel quietly with you.</p><div className="mt-20 grid grid-cols-2 border-y border-hairline md:grid-cols-4">{[['Kannauj attar heritage','01'],['Slow-distilled','02'],['Alcohol-free attars','03'],['Small-batch','04']].map(([label, number]) => <div key={label} className="border-r border-hairline px-5 py-7 last:border-0 md:px-7"><span className="text-label text-brand-accent">{number}</span><p className="mt-5 text-sm text-text-muted">{label}</p></div>)}</div></section>
 
-      <section className="border-y border-hairline bg-bg-surface">
-        <div className="container-brand grid items-center gap-16 py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-28 lg:py-40">
-          <div className="relative aspect-[4/5] overflow-hidden bg-bg-elevated">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_42%,rgba(200,169,110,0.28),transparent_32%),linear-gradient(145deg,transparent_20%,rgba(28,25,23,0.18))]" />
-            <div className="absolute left-1/2 top-1/2 h-[68%] w-[42%] -translate-x-1/2 -translate-y-1/2 rounded-[45%_45%_18%_18%] border border-brand-accent/35 bg-bg-surface/35 shadow-[0_35px_100px_rgba(0,0,0,0.18)]" />
-            <div className="absolute bottom-8 left-8 right-8 flex items-end justify-between border-t border-hairline pt-4">
-              <span className="text-label text-text-muted">The atelier</span>
-              <span className="font-display text-2xl italic text-brand-accent">001</span>
-            </div>
-          </div>
-          <div className="max-w-xl">
-            <p className="text-label mb-7 text-brand-accent">A slower kind of luxury</p>
-            <h2 className="text-display-xl text-foreground">The art of staying close.</h2>
-            <div className="mt-10 space-y-6 text-base leading-[1.85] text-text-muted">
-              <p>At Ummati, perfume is not an announcement. It is a private language between skin, air, and memory.</p>
-              <p>We work with a restrained palette of precious materials, letting every note breathe before it finds its place in the final composition.</p>
-            </div>
-            <Link href="/about" className="luxury-link mt-12 inline-flex items-center gap-3 text-label text-foreground transition-colors hover:text-brand-accent">Enter the atelier <ArrowUpRight className="h-4 w-4" strokeWidth={1.2} /></Link>
-          </div>
-        </div>
-      </section>
+      <section className="container-brand py-24 lg:py-36"><div className="mb-14 flex items-end justify-between gap-8"><div><p className="text-label mb-5 text-brand-accent">The edit</p><h2 className="text-display-lg text-foreground">Objects of desire.</h2></div><Link href="/shop" className="luxury-link text-label text-text-muted hover:text-brand-accent">View all <ArrowUpRight className="ml-2 inline h-4 w-4" /></Link></div><div className="grid grid-cols-2 gap-x-4 gap-y-16 md:grid-cols-4 md:gap-x-7">{featuredProducts.length ? featuredProducts.slice(0, 4).map((product, index) => <div key={product._id} className={index % 2 ? 'md:translate-y-8' : ''}><ProductCard product={product} priority={index < 4} /></div>) : Array.from({ length: 4 }).map((_, index) => <ProductCardSkeleton key={index} />)}</div></section>
 
-      <section className="container-brand py-28 lg:py-36">
-        <div className="grid items-end gap-10 md:grid-cols-[1fr_auto]">
-          <div>
-            <p className="text-label mb-5 text-brand-accent">A note from us</p>
-            <p className="max-w-4xl font-display text-4xl font-light leading-[1.05] tracking-[-0.025em] text-foreground md:text-6xl">“The best fragrance is the one that makes someone lean closer.”</p>
-          </div>
-          <span className="text-label text-text-muted">Ummati / 2024—∞</span>
-        </div>
-      </section>
+      <section className="border-y border-hairline bg-bg-surface"><div className="container-brand grid items-center gap-12 py-24 lg:grid-cols-2 lg:gap-24 lg:py-36"><div className="relative aspect-[4/5] overflow-hidden bg-bg-elevated">{editorialImage?.url && <img src={editorialImage.url} alt="Raw materials used in Ummati fragrance" className="h-full w-full object-cover grayscale-[20%] transition-transform duration-1000 hover:scale-[1.03]" />}<div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" /><span className="absolute bottom-6 left-6 text-label text-white">Raw materials / Kannauj</span></div><div><p className="text-label mb-7 text-brand-accent">A slower kind of luxury</p><blockquote className="font-display text-5xl font-light italic leading-[1.05] text-foreground md:text-7xl">“The finest ingredients are given time to speak.”</blockquote><p className="mt-10 max-w-md text-sm leading-[1.8] text-text-muted">From earth to copper still, each composition is shaped by patience, weather, and the hands that know the material.</p></div></div></section>
+
+      <section className="container-brand py-24 lg:py-32"><div className="mb-12 flex items-end justify-between"><div><p className="text-label mb-5 text-brand-accent">Find your atmosphere</p><h2 className="text-display-lg text-foreground">Olfactive families.</h2></div><Link href="/shop" className="luxury-link text-label text-text-muted hover:text-brand-accent">Explore all</Link></div><div className="border-y border-hairline">{notes.map((note, index) => <Link key={note} href={`/shop?fragranceFamily=${encodeURIComponent(note === 'Citrus / Fresh' ? 'Fresh' : note)}`} className="group flex items-center justify-between border-b border-hairline py-5 last:border-0"><span className="text-label text-text-muted">0{index + 1}</span><span className="font-display text-3xl font-light text-foreground transition-colors group-hover:text-brand-accent md:text-5xl">{note}</span><ArrowUpRight className="h-5 w-5 text-text-muted transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-brand-accent" /></Link>)}</div></section>
+
+      <section className="bg-[#211d18] text-[#f2eee6]"><div className="container-brand py-24 lg:py-36"><p className="text-label text-brand-accent">The atelier</p><h2 className="mt-6 max-w-3xl font-display text-5xl font-light leading-none md:text-8xl">Made slowly.<br /><em>Remembered deeply.</em></h2><div className="mt-20 grid gap-8 md:grid-cols-3">{[['01','Harvest','Botanicals gathered at their most expressive.'],['02','Distil','Copper, steam, and a patient watch over every drop.'],['03','Mature','Time softens the edges and lets the story settle.']].map(([number, title, copy], index) => <div key={title} className="relative border-t border-white/20 pt-6 md:border-l md:border-t-0 md:pl-7"><span className="text-label text-brand-accent">{number}</span><h3 className="mt-8 font-display text-3xl font-light">{title}</h3><p className="mt-4 max-w-xs text-sm leading-7 text-white/60">{copy}</p>{index < 2 && <span className="absolute right-0 top-8 hidden h-px w-12 bg-white/20 md:block" />}</div>)}</div><div className="glass mt-20 max-w-md p-7"><p className="font-display text-2xl font-light italic">“A good attar does not announce itself. It opens a door.”</p><p className="mt-5 text-label text-white/50">— Master distiller, Kannauj</p></div></div></section>
+
+      <section className="container-brand py-24 lg:py-36"><div className="mb-14 flex items-end justify-between"><div><p className="text-label mb-5 text-brand-accent">The signatures</p><h2 className="text-display-lg text-foreground">Best sellers.</h2></div><Link href="/shop?category=bestsellers" className="luxury-link text-label text-text-muted hover:text-brand-accent">View all</Link></div><div className="grid gap-8 lg:grid-cols-2"><div>{bestSellerProducts[0] && <ProductCard product={bestSellerProducts[0]} priority />}</div><div className="grid grid-cols-2 gap-x-5 gap-y-12">{bestSellerProducts.slice(1, 5).map((product) => <ProductCard key={product._id} product={product} />)}</div></div></section>
+
+      <section className="relative min-h-[28rem] overflow-hidden bg-bg-elevated">{cinematicImage?.url && <img src={cinematicImage.url} alt="Ummati fragrance materials in warm light" className="absolute inset-0 h-full w-full object-cover opacity-70" />}<div className="absolute inset-0 bg-black/35" /><div className="container-brand relative flex min-h-[28rem] items-center justify-center text-center"><p className="max-w-4xl font-display text-5xl font-light italic text-white md:text-8xl">A trace of somewhere beautiful.</p></div></section>
+
+      <section className="container-brand py-24 lg:py-36"><div className="mb-16 flex items-end justify-between"><div><p className="text-label mb-5 text-brand-accent">Worn, remembered, returned to</p><h2 className="text-display-lg text-foreground">From our community.</h2></div><div className="hidden text-label text-text-muted md:block">As seen in · Vogue · Elle · GQ</div></div><div className="grid gap-12 md:grid-cols-3">{testimonials.map(([quote, name, city]) => <figure key={name} className="border-t border-hairline pt-7"><div className="flex gap-1 text-brand-accent" aria-label="5 out of 5 stars">{Array.from({ length: 5 }).map((_, index) => <Star key={index} className="h-3 w-3 fill-current" />)}</div><blockquote className="mt-7 font-display text-3xl font-light leading-tight text-foreground">“{quote}”</blockquote><figcaption className="mt-8 text-label text-text-muted">{name} · {city}</figcaption></figure>)}</div><p className="mt-20 border-t border-hairline pt-6 text-center text-label text-text-muted md:hidden">As seen in · Vogue · Elle · GQ</p></section>
+
+      <section className="border-t border-hairline"><div className="container-brand flex flex-col items-center py-28 text-center lg:py-40"><p className="text-label text-brand-accent">Begin somewhere new</p><h2 className="mt-7 max-w-3xl font-display text-5xl font-light leading-none text-foreground md:text-8xl">Find the scent that stays.</h2><Link href="/shop" className="mt-12 inline-flex items-center gap-4 border border-brand-accent bg-brand-accent px-7 py-4 text-label text-primary-foreground transition-colors hover:bg-transparent hover:text-brand-accent">Explore the collection <Check className="h-4 w-4" /></Link></div></section>
     </div>
   )
 }

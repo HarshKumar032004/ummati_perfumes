@@ -11,9 +11,9 @@ interface FragranceNotesProps {
 }
 
 const tierCopy = {
-  Top: 'The first impression',
-  Heart: 'The emotional centre',
-  Base: 'The lasting trace',
+  Top: 'first 15 minutes',
+  Heart: '2–4 hours',
+  Base: '6+ hours',
 }
 
 function describeNote(note: string, tier: keyof typeof tierCopy) {
