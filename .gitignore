@@ -56,3 +56,8 @@ desktop.ini
 
 # Keep env example
 !.env.example
+
+# Local tools and agents
+.21st/
+.agents/
+skills-lock.json
